@@ -16,7 +16,7 @@ var chaosLevel = {factor: 5, group: chaosTable['5']}
 
 function setChaos (level) {
   if (level <1 || level >9) {
-      level = 4
+      level = 5
   }
   chaosLevel.factor = level
   chaosLevel.group = chaosTable[_.toString(level)]  
@@ -121,15 +121,14 @@ function pickEventMeaning () {
 function check (odds, chaosFactor) {
     var roll = _.random(1, 100)      
     var eventMeaning = 'none'
-    var eventFocus = 'none'
-    var random = isRandomEvent(roll)
+    var eventFocus = 'none'    
     var result = {}
 
     setChaos(chaosFactor)
 
     var fateResult = fate(odds, roll)
 
-    if (random == true) {
+    if (isRandomEvent(roll) == true) {
         eventFocus = pickEventFocus()
         eventMeaning = pickEventMeaning()
     }
@@ -138,10 +137,10 @@ function check (odds, chaosFactor) {
     result.chaos = chaosLevel.factor
     result.roll = roll
     result.decision = fateResult.text
-    result.randomEvent = random
+    result.randomEvent = isRandomEvent(roll)
     result.focus = eventFocus
     result.meaning = eventMeaning
     console.log(result)
 }
 
-check('very likely', 4)
+check('very likely', 1)
