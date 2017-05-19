@@ -119,15 +119,14 @@ function pickEventMeaning () {
 function check (odds, chaosFactor) {
     var roll = _.random(1, 100)      
     var eventMeaning = 'none'
-    var eventFocus = 'none'
-    var random = isRandomEvent(roll)
+    var eventFocus = 'none'    
     var result = {}
 
     setChaos(chaosFactor)
 
     var fateResult = fate(odds, roll)
 
-    if (random == true) {
+    if (isRandomEvent(roll) == true) {
         eventFocus = pickEventFocus()
         eventMeaning = pickEventMeaning()
     }
@@ -136,7 +135,7 @@ function check (odds, chaosFactor) {
     result.chaos = chaosLevel.factor
     result.roll = roll
     result.decision = fateResult.text
-    result.randomEvent = random
+    result.randomEvent = isRandomEvent(roll)
     result.focus = eventFocus
     result.meaning = eventMeaning
 	
@@ -161,7 +160,7 @@ $('input').bootstrapNumber({
 	upClass: 'danger',
 	downClass: 'success',
 	center: true
-});
+})
 
 
 
