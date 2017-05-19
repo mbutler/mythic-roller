@@ -371,10 +371,3 @@ nav a:hover {
         page-break-after: avoid;
     }
 }
-
-$('input').bootstrapNumber({
-
-upClass: 'danger',
-downClass: 'success'
-center: true
-});

@@ -148,6 +148,7 @@ $(".btn").on('click', function(e) {
 	var result = check(e.target.textContent, $('input').val())
 	console.log(result)
 	$("#output").append("<li>roll: " + result.roll + "</li>")
+	$("#output").append("<li>odds: " + result.input + "</li>")
 	$("#output").append("<li>chaos rank: " + result.chaos + "</li>")
 	$("#output").append("<li>answer is <strong>" + result.decision + "</strong></li>")
 	if (result.randomEvent == true) {
@@ -156,7 +157,11 @@ $(".btn").on('click', function(e) {
 	}
 })
 
-$('input').bootstrapNumber();
+$('input').bootstrapNumber({
+	upClass: 'danger',
+	downClass: 'success',
+	center: true
+});
 
 
 
