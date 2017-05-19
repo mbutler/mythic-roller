@@ -14,18 +14,18 @@ const chaosTable = {
 
 var chaosLevel = {factor: 5, group: chaosTable['5']}
 
-function setChaos(level) {
+function setChaos (level) {
   if (level <1 || level >9) {
-      level = 5
+      level = 4
   }
   chaosLevel.factor = level
   chaosLevel.group = chaosTable[_.toString(level)]  
 }
 
-function pickFocus () {
+function pickEventFocus () {
   var roll = _.random(1, 100)
   var focusName = ''
-  console.log(roll)
+  //console.log(roll)
 
   let focusTable = [
     {range: [1, 8], label: 'Remote event'},
@@ -43,19 +43,17 @@ function pickFocus () {
 
   _.forEach(focusTable, function(focus) {
     if (_.inRange(roll, focus.range[0], focus.range[1])) {
-      focusName = focus['label']      
+      focusName = focus.label    
     }
   })
 
   return focusName
 }
 
-function fate (val) {
-  var roll = _.random(1, 100)
-  //console.log(roll)
+function fate (val, roll) {
   var group
   var odds
-  var result = ''
+  var result = {}
 
   if (typeof val === 'string') {
     val = _.capitalize(val)
@@ -78,19 +76,20 @@ function fate (val) {
   odds = _.find(oddsList, function(o) { return o.index == val || o.label == val})
 
   if (odds === undefined) {
-    odds = {index: 4, label: '50/50'}
+    odds = {index: 4, label: '50/50'}    
   }
   
   group = chaosLevel.group[_.toString(odds.index)]
 
   if (roll <= group[0]) {
-    result = 'Exceptional Yes'
+    result.text = 'Exceptional Yes'
   } else if (roll <= group[1]) {
-    result = 'Yes'
+    result.text = 'Yes'
   } else if (roll >= group[2]) {
-    result = 'Exceptional No'
-  } else result = 'No'
+    result.text = 'Exceptional No'
+  } else result.text = 'No'
 
+  result.input = odds.label
   return result
 }
 
@@ -108,8 +107,8 @@ function isRandomEvent (roll) {
   return isRandom
 }
 
-function eventMeaning() {
-  var meaning
+function pickEventMeaning () {
+  var meaning = ''
   let action = ['Attainment','Starting','Neglect','Fight','Recruit','Triumph','Violate','Oppose','Malice','Communicate','Persecute','Increase','Decrease','Abandon','Gratify','Inquire','Antagonise','Move','Waste','Truce','Release','Befriend','Judge','Desert','Dominate','Procrastinate','Praise','Separate','Take','Break','Heal','Delay','Stop','Lie','Return','Immitate','Struggle','Inform','Bestow','Postpone','Expose','Haggle','Imprison','Release','Celebrate','Develop','Travel','Block','Harm','Debase','Overindulge','Adjourn','Adversity','Kill','Disrupt','Usurp','Create','Betray','Agree','Abuse','Oppress','Inspect','Ambush','Spy','Attach','Carry','Open','Carelessness','Ruin','Extravagance','Trick','Arrive','Propose','Divide','Refuse','Mistrust','Deceive','Cruelty','Intolerance','Trust','Excitement','Activity','Assist','Care','Negligence','Passion','Work hard','Control','Attract','Failure','Pursue','Vengeance','Proceedings','Dispute','Punish','Guide','Transform','Overthrow','Oppress','Change']
 
   let subject = ['Goals','Dreams','Environment','Outside','Inside','Reality','Allies','Enemies','Evil','Good','Emotions','Opposition','War','Peace','The innocent','Love','The spiritual','The intellectual','New ideas','Joy','Messages','Energy','Balance','Tension','Friendship','The physical','A project','Pleasures','Pain','Possessions','Benefits','Plans','Lies','Expectations','Legal matters','Bureaucracy','Business','A path','News','Exterior factors','Advice','A plot','Competition','Prison','Illness','Food','Attention','Success','Failure','Travel','Jealousy','Dispute','Home','Investment','Suffering','Wishes','Tactics','Stalemate','Randomness','Misfortune','Death','Disruption','Power','A burden','Intrigues','Fears','Ambush','Rumor','Wounds','Extravagance','A representative','Adversities','Opulence','Liberty','Military','The mundane','Trials','Masses','Vehicle','Art','Victory','Dispute','Riches','Status quo','Technology','Hope','Magic','Illusions','Portals','Danger','Weapons','Animals','Weather','Elements','Nature','The public','Leadership','Fame','Anger','Information']
@@ -119,4 +118,30 @@ function eventMeaning() {
   return meaning
 }
 
-console.log(fate(2))
+function check (odds, chaosFactor) {
+    var roll = _.random(1, 100)      
+    var eventMeaning = 'none'
+    var eventFocus = 'none'
+    var random = isRandomEvent(roll)
+    var result = {}
+
+    setChaos(chaosFactor)
+
+    var fateResult = fate(odds, roll)
+
+    if (random == true) {
+        eventFocus = pickEventFocus()
+        eventMeaning = pickEventMeaning()
+    }
+
+    result.input = fateResult.input
+    result.chaos = chaosLevel.factor
+    result.roll = roll
+    result.decision = fateResult.text
+    result.randomEvent = random
+    result.focus = eventFocus
+    result.meaning = eventMeaning
+    console.log(result)
+}
+
+check('very likely', 4)
